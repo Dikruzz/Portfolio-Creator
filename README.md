@@ -1,13 +1,15 @@
 # Portique
 
-Portique is a premium, AI-assisted portfolio builder foundation for Flutter. The project is organized around feature modules, Riverpod state management, reusable UI primitives, a responsive design system, and Firebase integration placeholders.
+Portique is a premium, AI-assisted portfolio builder foundation for Flutter. The project is organized around feature modules, Riverpod state management, reusable UI primitives, a responsive design system, cinematic onboarding, and Firebase integration placeholders.
 
 ## What's included
 
 - Flutter app entry point with `ProviderScope`
 - Clean feature-first architecture
 - Riverpod providers/controllers for app, onboarding, auth, portfolio, and AI flows
-- Dark premium Material 3 theme
+- Splash screen and Duolingo-inspired step-by-step onboarding flow
+- Profession and style preference selection cards
+- Dark premium Material 3 theme with subtle gradients and animation-ready UI primitives
 - Responsive breakpoints and adaptive layout helpers
 - Reusable components for cards, buttons, forms, shells, and loading states
 - Firebase Auth/Firestore repository placeholders
@@ -43,6 +45,7 @@ lib/
   app/                 App shell, routes, and app-level providers
   core/                Cross-cutting config, Firebase placeholders, responsive system, theme, widgets
   features/            Feature modules: onboarding, auth, portfolio, AI
+    onboarding/        Splash screen, cinematic intro, profession/style preference steps
   main.dart            Application bootstrap
 
 test/                  Widget smoke tests

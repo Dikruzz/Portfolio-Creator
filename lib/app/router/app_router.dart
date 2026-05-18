@@ -4,12 +4,18 @@ import 'package:go_router/go_router.dart';
 import '../../features/ai/presentation/ai_studio_screen.dart';
 import '../../features/auth/presentation/sign_in_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
+import '../../features/onboarding/presentation/splash_screen.dart';
 import '../../features/portfolio/presentation/portfolio_dashboard_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: OnboardingScreen.routePath,
+    initialLocation: SplashScreen.routePath,
     routes: [
+      GoRoute(
+        path: SplashScreen.routePath,
+        name: SplashScreen.routeName,
+        builder: (context, state) => const SplashScreen(),
+      ),
       GoRoute(
         path: OnboardingScreen.routePath,
         name: OnboardingScreen.routeName,
