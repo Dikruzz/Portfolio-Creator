@@ -15,7 +15,8 @@ Portique is a premium, AI-assisted portfolio builder foundation for Flutter. The
 - Firebase Auth/Firestore repository placeholders with Google, email, and anonymous guest auth paths
 - Local SharedPreferences-backed auth session placeholder until Firebase is configured
 - Guided project creation with autosaved local drafts, image picking, review, and AI preparation payloads
-- AI repository placeholder ready for a backend, Firebase Function, or OpenAI proxy
+- Modular OpenAI Responses API integration layer with mock AI fallback when no API key is configured
+- AI prompt builders for headlines, about sections, project summaries, profession optimization, and portfolio structure
 
 ## Local setup
 
@@ -26,6 +27,17 @@ flutter pub get
 flutter create . --platforms=ios,android,web,macos,windows,linux
 flutter run
 ```
+
+
+## AI setup
+
+Portique uses a modular AI service layer. During local development, it returns mock AI responses automatically. To call OpenAI directly, provide compile-time environment values:
+
+```bash
+flutter run --dart-define=OPENAI_API_KEY=your_api_key --dart-define=OPENAI_MODEL=gpt-5.2
+```
+
+For production apps, prefer proxying OpenAI calls through a secure backend or Firebase Function instead of shipping API keys in a client app.
 
 ## Firebase setup
 
@@ -52,6 +64,7 @@ lib/
     onboarding/        Splash screen, cinematic intro, profession/style preference steps
     auth/              Google, email, guest, persistent-session auth flow
     portfolio/         Dashboard, drag ordering, guided project upload, review flow
+    ai/                OpenAI client, prompt builders, mock AI service, generation UI
   main.dart            Application bootstrap
 
 test/                  Widget smoke tests
