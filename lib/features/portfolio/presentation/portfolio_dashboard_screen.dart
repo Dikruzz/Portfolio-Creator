@@ -8,6 +8,8 @@ import '../../../core/widgets/premium_scaffold.dart';
 import '../../../core/widgets/primary_button.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../ai/presentation/ai_studio_screen.dart';
+import '../../auth/presentation/sign_in_screen.dart';
+import '../../auth/state/auth_controller.dart';
 import '../state/portfolio_controller.dart';
 import 'widgets/portfolio_card.dart';
 
@@ -20,6 +22,13 @@ class PortfolioDashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final portfolio = ref.watch(portfolioControllerProvider);
+    final authState = ref.watch(authControllerProvider);
+
+    ref.listen(authControllerProvider, (previous, next) {
+      if (!next.isRestoring && !next.isAuthenticated) {
+        context.go(SignInScreen.routePath);
+      }
+    });
 
     return PremiumScaffold(
       title: 'Portfolio',
@@ -28,6 +37,13 @@ class PortfolioDashboardScreen extends ConsumerWidget {
           onPressed: () => context.go(AiStudioScreen.routePath),
           icon: const Icon(Icons.auto_awesome_rounded),
           label: const Text('AI Studio'),
+        ),
+        TextButton.icon(
+          onPressed: authState.isBusy
+              ? null
+              : () => ref.read(authControllerProvider.notifier).signOut(),
+          icon: const Icon(Icons.logout_rounded),
+          label: const Text('Sign out'),
         ),
       ],
       child: portfolio.when(

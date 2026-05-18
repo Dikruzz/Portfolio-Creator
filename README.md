@@ -12,7 +12,8 @@ Portique is a premium, AI-assisted portfolio builder foundation for Flutter. The
 - Dark premium Material 3 theme with subtle gradients and animation-ready UI primitives
 - Responsive breakpoints and adaptive layout helpers
 - Reusable components for cards, buttons, forms, shells, and loading states
-- Firebase Auth/Firestore repository placeholders
+- Firebase Auth/Firestore repository placeholders with Google, email, and anonymous guest auth paths
+- Local SharedPreferences-backed auth session placeholder until Firebase is configured
 - AI repository placeholder ready for a backend, Firebase Function, or OpenAI proxy
 
 ## Local setup
@@ -36,7 +37,9 @@ flutterfire configure
 ```
 
 3. Wire the generated `lib/firebase_options.dart` into `lib/main.dart` when ready.
-4. Replace placeholder repository methods with production Firebase calls.
+4. Update `lib/core/firebase/firebase_placeholders.dart` to return `FirebaseAuth.instance` and `FirebaseFirestore.instance`.
+5. Configure Google Sign In for each target platform in Firebase/Google Cloud.
+6. Replace remaining placeholder repository methods with production Firebase calls.
 
 ## Project structure
 
@@ -46,6 +49,7 @@ lib/
   core/                Cross-cutting config, Firebase placeholders, responsive system, theme, widgets
   features/            Feature modules: onboarding, auth, portfolio, AI
     onboarding/        Splash screen, cinematic intro, profession/style preference steps
+    auth/              Google, email, guest, persistent-session auth flow
   main.dart            Application bootstrap
 
 test/                  Widget smoke tests

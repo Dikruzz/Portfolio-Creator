@@ -1,23 +1,27 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
+import '../../auth/state/auth_controller.dart';
+import '../../portfolio/presentation/portfolio_dashboard_screen.dart';
 import 'onboarding_screen.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   static const routeName = 'splash';
   static const routePath = '/';
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends ConsumerState<SplashScreen> with SingleTickerProviderStateMixin {
+  bool _readyToRoute = false;
   late final AnimationController _controller;
   late final Animation<double> _fade;
   late final Animation<double> _scale;
@@ -35,7 +39,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
 
     Timer(const Duration(milliseconds: 1900), () {
-      if (mounted) context.go(OnboardingScreen.routePath);
+      if (!mounted) return;
+      _readyToRoute = true;
+      _routeForAuthState(ref.read(authControllerProvider));
     });
   }
 
@@ -45,8 +51,20 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.dispose();
   }
 
+  void _routeForAuthState(AuthState authState) {
+    if (!_readyToRoute || authState.isRestoring) return;
+    final destination = authState.isAuthenticated
+        ? PortfolioDashboardScreen.routePath
+        : OnboardingScreen.routePath;
+    context.go(destination);
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen(authControllerProvider, (previous, next) {
+      _routeForAuthState(next);
+    });
+
     return Scaffold(
       body: DecoratedBox(
         decoration: const BoxDecoration(
