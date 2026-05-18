@@ -14,6 +14,7 @@ Portique is a premium, AI-assisted portfolio builder foundation for Flutter. The
 - Reusable components for cards, buttons, forms, shells, and loading states
 - Firebase Auth/Firestore repository placeholders with Google, email, and anonymous guest auth paths
 - Local SharedPreferences-backed auth session placeholder until Firebase is configured
+- Guided project creation with autosaved local drafts, image picking, review, and AI preparation payloads
 - AI repository placeholder ready for a backend, Firebase Function, or OpenAI proxy
 
 ## Local setup
@@ -50,6 +51,7 @@ lib/
   features/            Feature modules: onboarding, auth, portfolio, AI
     onboarding/        Splash screen, cinematic intro, profession/style preference steps
     auth/              Google, email, guest, persistent-session auth flow
+    portfolio/         Dashboard, drag ordering, guided project upload, review flow
   main.dart            Application bootstrap
 
 test/                  Widget smoke tests

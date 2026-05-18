@@ -10,7 +10,9 @@ import '../../../core/widgets/section_header.dart';
 import '../../ai/presentation/ai_studio_screen.dart';
 import '../../auth/presentation/sign_in_screen.dart';
 import '../../auth/state/auth_controller.dart';
+import '../domain/portfolio.dart';
 import '../state/portfolio_controller.dart';
+import 'project_creation/project_creation_screen.dart';
 import 'widgets/portfolio_card.dart';
 
 class PortfolioDashboardScreen extends ConsumerWidget {
@@ -33,6 +35,11 @@ class PortfolioDashboardScreen extends ConsumerWidget {
     return PremiumScaffold(
       title: 'Portfolio',
       actions: [
+        TextButton.icon(
+          onPressed: () => context.go(ProjectCreationScreen.routePath),
+          icon: const Icon(Icons.add_circle_outline_rounded),
+          label: const Text('New project'),
+        ),
         TextButton.icon(
           onPressed: () => context.go(AiStudioScreen.routePath),
           icon: const Icon(Icons.auto_awesome_rounded),
@@ -62,13 +69,15 @@ class PortfolioDashboardScreen extends ConsumerWidget {
               children: profile.skills.map((skill) => Chip(label: Text(skill))).toList(),
             ),
             const SizedBox(height: AppSpacing.xl),
+            ProjectOrderBoard(projects: profile.projects),
+            const SizedBox(height: AppSpacing.xl),
             Row(
               children: [
                 const Expanded(child: SectionHeader(title: 'Featured work', subtitle: 'Case studies ready for AI refinement.')),
                 PrimaryButton(
-                  label: 'Generate copy',
-                  icon: Icons.auto_fix_high_rounded,
-                  onPressed: () => context.go(AiStudioScreen.routePath),
+                  label: 'Create project',
+                  icon: Icons.add_rounded,
+                  onPressed: () => context.go(ProjectCreationScreen.routePath),
                 ),
               ],
             ),
@@ -92,6 +101,81 @@ class PortfolioDashboardScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class ProjectOrderBoard extends StatefulWidget {
+  const ProjectOrderBoard({required this.projects, super.key});
+
+  final List<PortfolioProject> projects;
+
+  @override
+  State<ProjectOrderBoard> createState() => _ProjectOrderBoardState();
+}
+
+class _ProjectOrderBoardState extends State<ProjectOrderBoard> {
+  late List<PortfolioProject> _orderedProjects;
+
+  @override
+  void initState() {
+    super.initState();
+    _orderedProjects = [...widget.projects];
+  }
+
+  @override
+  void didUpdateWidget(covariant ProjectOrderBoard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.projects != widget.projects) {
+      _orderedProjects = [...widget.projects];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: AppColors.surface.withAlpha(180),
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SectionHeader(
+            title: 'Project order',
+            subtitle: 'Drag projects into the sequence visitors should browse first.',
+          ),
+          const SizedBox(height: AppSpacing.md),
+          ReorderableListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: _orderedProjects.length,
+            onReorder: (oldIndex, newIndex) {
+              setState(() {
+                if (newIndex > oldIndex) newIndex -= 1;
+                final project = _orderedProjects.removeAt(oldIndex);
+                _orderedProjects.insert(newIndex, project);
+              });
+            },
+            itemBuilder: (context, index) {
+              final project = _orderedProjects[index];
+              return ListTile(
+                key: ValueKey(project.title),
+                leading: CircleAvatar(
+                  backgroundColor: AppColors.surfaceElevated,
+                  child: Text('${index + 1}'),
+                ),
+                title: Text(project.title),
+                subtitle: Text(project.impact),
+                trailing: const Icon(Icons.drag_handle_rounded),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
